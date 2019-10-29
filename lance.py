@@ -20,7 +20,7 @@ from google.auth.transport.requests import Request
 #config = np.loadtxt("config",dtype=str)
 #print(type(str(config[0])))
 
-TOKEN = os.environ['TOKEN']
+TOKEN = os.environ['GEOS_TOKEN']
 USERNAME = os.environ['POP_UNAME']
 PASSWORD = os.environ['POP_PASSWORD']
 
