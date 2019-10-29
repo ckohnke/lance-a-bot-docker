@@ -17,12 +17,12 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-config = np.loadtxt("config",dtype=str)
+#config = np.loadtxt("config",dtype=str)
 #print(type(str(config[0])))
 
-TOKEN = str(config[0])
-USERNAME = str(config[1])
-PASSWORD = str(config[2])
+TOKEN = os.environ['TOKEN']
+USERNAME = os.environ['POP_UNAME']
+PASSWORD = os.environ['POP_PASSWORD']
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
