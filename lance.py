@@ -108,7 +108,7 @@ def proc_fields(f,par):
     elif(f.startswith('Masters Division Admission')):
         par['macost']=f[len('Masters Division Admission'):]
     elif(f.startswith('Admission')):
-        par['cost']=f[len('Admission'):len('Admission')+5]
+        par['cost']=f[len('Admission'):]
     elif(f.startswith('Details')):
         par['details']=f[len('Details'):]
     elif(f.startswith('League Cup')):
