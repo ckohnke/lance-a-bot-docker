@@ -287,8 +287,8 @@ async def tid(ctx,tid : str,time = None, cal = None):
     embed.add_field(name="Pokemon Website", value="<%s>"%URLT,inline=False)
     tourny['url'] = URLT
 
-    if(details):
-        embed.add_field(name="Details", value="%(details)s"%tourny,inline=False)
+    #if(details):
+    #    embed.add_field(name="Details", value="%(details)s"%tourny,inline=False)
 
     if(time=='lookup'):
         print(tourny)
