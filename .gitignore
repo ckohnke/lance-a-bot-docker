@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+*.swp
+token.pickle
+quickstart.py
+credentials.json
+config
