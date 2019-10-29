@@ -108,7 +108,7 @@ def proc_fields(f,par):
     elif(f.startswith('Masters Division Admission')):
         par['macost']=f[len('Masters Division Admission'):]
     elif(f.startswith('Admission')):
-        par['cost']=f[len('Admission'):]
+        par['cost']=f[len('Admission'):len('Admission')+5]
     elif(f.startswith('Details')):
         par['details']=f[len('Details'):]
     elif(f.startswith('League Cup')):
@@ -298,9 +298,9 @@ async def tid(ctx,tid : str,time = None, cal = None):
 
     if(time):
         tourny['time'] = str(time).encode('ascii',"ignore")
-        embed.add_field(name="Carpool", value="The carpool will leave from Lot N (behind the Green Center) at **%s**. Add a reaction to this message to let us know you are coming. Comment below for any other discussion regarding the event or carpool."%time,inline=False)
+        embed.add_field(name="Carpool", value="Lot N (behind the Green Center) at **%s**"%time,inline=False)
     else:
-        embed.add_field(name="Carpool", value="There will be no carpool to this event by the Mods. Add a reaction to this message to let us know you are coming. Comment below for any other discussion regarding the event or to organize a carpool.",inline=False)
+        embed.add_field(name="Carpool", value="There will be no carpool to this event by the Mods. Comment below for any other discussion regarding the event or to organize a carpool.",inline=False)
         tourny['time'] = 'None'
     #print(str(ctx.guild.roles))
 
