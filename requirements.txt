@@ -6,3 +6,4 @@ google_auth_oauthlib==0.4.1
 google_api_python_client==1.7.11
 pytz==2019.3
 tzwhere==3.0.3
+lxml==4.4.1
