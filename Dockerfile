@@ -1,11 +1,13 @@
 FROM python:3
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/lance-a-bot
 
 COPY requirements.txt ./
+RUN apt-get update && apt-get -y install libgeos-dev 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY lance.py .
 
-CMD [ "python", "./lance.py" ]
+VOLUME /config
+
 CMD "python lance.py > /config/lance.log"

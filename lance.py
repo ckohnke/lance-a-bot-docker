@@ -17,12 +17,14 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-config = np.loadtxt("config",dtype=str)
+#config = np.loadtxt("config",dtype=str)
 #print(type(str(config[0])))
 
-TOKEN = str(config[0])
-USERNAME = str(config[1])
-PASSWORD = str(config[2])
+TOKEN = os.environ['GEOS_TOKEN']
+USERNAME = os.environ['POP_UNAME']
+PASSWORD = os.environ['POP_PASSWORD']
+
+PWD = "/config/"
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
@@ -42,8 +44,8 @@ creds = None
 # The file token.pickle stores the user's access and refresh tokens, and is
 # created automatically when the authorization flow completes for the first
 # time.
-if os.path.exists('token.pickle'):
-    with open('token.pickle', 'rb') as token:
+if os.path.exists(PWD+'token.pickle'):
+    with open(PWD+'token.pickle', 'rb') as token:
         creds = pickle.load(token)
 # If there are no (valid) credentials available, let the user log in.
 if not creds or not creds.valid:
@@ -51,10 +53,10 @@ if not creds or not creds.valid:
         creds.refresh(Request())
     else:
         flow = InstalledAppFlow.from_client_secrets_file(
-            'credentials.json', SCOPES)
+            PWD+'credentials.json', SCOPES)
         creds = flow.run_local_server(port=0)
     # Save the credentials for the next run
-    with open('token.pickle', 'wb') as token:
+    with open(PWD+'token.pickle', 'wb') as token:
         pickle.dump(creds, token)
 
 service = build('calendar', 'v3', credentials=creds)
