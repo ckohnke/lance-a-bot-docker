@@ -10,4 +10,4 @@ COPY lance.py .
 
 VOLUME /config
 
-#CMD [ "python", "lance.py" ]
+CMD [ "python", "lance.py" ]
