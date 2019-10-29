@@ -73,8 +73,8 @@ def proc_fields(f,par):
     elif(f.startswith('Online Registration')):
         par['onlinereg']=f[len('Online Registration'):-2] # Click Here
         par['onlinereg']="YES - SEE POKEMON EVENT PAGE"
-    elif(f.startswith('Registration')):
-        par['registration']=f[len('Registration'):]
+    elif(f.startswith('On-Site Registration')):
+        par['registration']=f[len('On-Site Registration'):]
     elif(f.startswith('Product')):
         par['product']=f[len('Product'):]
     elif(f.startswith('Premier Event')):
@@ -241,7 +241,7 @@ async def tid(ctx,tid : str,time = None, cal = None):
     if(tourny['onlinereg'] != '---'):
         onlinereg = True
     if(tourny['details'] != '---'):
-        details = True
+        details = False
 
     link = soup.find_all('a', {"href" : re.compile(r'http://maps.google.com/*')})
 
@@ -287,8 +287,8 @@ async def tid(ctx,tid : str,time = None, cal = None):
     embed.add_field(name="Pokemon Website", value="<%s>"%URLT,inline=False)
     tourny['url'] = URLT
 
-    #if(details):
-    #    embed.add_field(name="Details", value="%(details)s"%tourny,inline=False)
+    if(details):
+        embed.add_field(name="Details", value="%(details)s"%tourny,inline=False)
 
     if(time=='lookup'):
         print(tourny)
