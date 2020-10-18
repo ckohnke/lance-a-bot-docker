@@ -1,8 +1,8 @@
-requests==2.22.0
-beautifulsoup4==4.8.1
-discord==1.0.1
-protobuf==3.10.0
+requests==2.24.0
+beautifulsoup4==4.9.3
+discord.py==1.5.0
+protobuf==3.13.0
 google_auth_oauthlib==0.4.1
-google_api_python_client==1.7.11
-pytz==2019.3
+google_api_python_client==1.12.3
+pytz==2020.1
 tzwhere==3.0.3
