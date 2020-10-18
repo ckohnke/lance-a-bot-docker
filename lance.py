@@ -73,8 +73,8 @@ def proc_fields(f,par):
     elif(f.startswith('Online Registration')):
         par['onlinereg']=f[len('Online Registration'):-2] # Click Here
         par['onlinereg']="YES - SEE POKEMON EVENT PAGE"
-    elif(f.startswith('Registration')):
-        par['registration']=f[len('Registration'):]
+    elif(f.startswith('On-Site Registration')):
+        par['registration']=f[len('On-Site Registration'):]
     elif(f.startswith('Product')):
         par['product']=f[len('Product'):]
     elif(f.startswith('Premier Event')):
@@ -209,10 +209,10 @@ async def tid(ctx,tid : str,time = None, cal = None):
         print('------ END')
         return
 
-    tourny = dict(name='',idn='',category='',date='',registration='',onlinereg='',product='',premier='',
-                  status='',sanctioned='',to='',venue='',address1='',address2='',city='',state='',
-                  zipcode='',country='',website='',cost='',jrcost='',srcost='',macost='',
-                  details='',lat='',lon='')
+    tourny = dict(name='---',idn='---',category='---',date='---',registration='---',onlinereg='---',product='---',premier='---',
+                  status='---',sanctioned='---',to='---',venue='---',address1='---',address2='---',city='---',state='---',
+                  zipcode='---',country='---',website='---',cost='---',jrcost='---',srcost='---',macost='---',
+                  details='---',lat='---',lon='---')
 
     fields = []
     ii=0
@@ -236,12 +236,12 @@ async def tid(ctx,tid : str,time = None, cal = None):
     age_cost = False
     onlinereg = False
     details = False
-    if((tourny['macost'] != '') or (tourny['srcost'] != '') or (tourny['jrcost'] != '')):
+    if((tourny['macost'] != '---') or (tourny['srcost'] != '---') or (tourny['jrcost'] != '---')):
         age_cost = True
-    if(tourny['onlinereg'] != ''):
+    if(tourny['onlinereg'] != '---'):
         onlinereg = True
-    if(tourny['details'] != ''):
-        details = True
+    if(tourny['details'] != '---'):
+        details = False
 
     link = soup.find_all('a', {"href" : re.compile(r'http://maps.google.com/*')})
 
@@ -277,7 +277,7 @@ async def tid(ctx,tid : str,time = None, cal = None):
     else:
         embed.add_field(name="Admission", value="%(cost)s"%tourny)
 
-    if(tourny['address2'] != ''):
+    if(tourny['address2'] != '---'):
         loc_str = "%(venue)s\n%(address1)s\n%(city)s, %(state)s %(zipcode)s\n<https://www.google.com/maps?q=%(lat)s,+%(lon)s>"%tourny
     else:
         loc_str = "%(venue)s\n%(address1)s\n%(address2)s\n%(city)s, %(state)s %(zipcode)s\n<https://www.google.com/maps?q=%(lat)s,+%(lon)s>"%tourny
@@ -298,9 +298,9 @@ async def tid(ctx,tid : str,time = None, cal = None):
 
     if(time):
         tourny['time'] = str(time).encode('ascii',"ignore")
-        embed.add_field(name="Carpool", value="The carpool will leave from Lot N (behind the Green Center) at **%s**. Add a reaction to this message to let us know you are coming. Comment below for any other discussion regarding the event or carpool."%time,inline=False)
+        embed.add_field(name="Carpool", value="Lot N (behind the Green Center) at **%s**"%time,inline=False)
     else:
-        embed.add_field(name="Carpool", value="There will be no carpool to this event by the Mods. Add a reaction to this message to let us know you are coming. Comment below for any other discussion regarding the event or to organize a carpool.",inline=False)
+        embed.add_field(name="Carpool", value="There will be no carpool to this event by the Mods. Comment below for any other discussion regarding the event or to organize a carpool.",inline=False)
         tourny['time'] = 'None'
     #print(str(ctx.guild.roles))
 
@@ -328,7 +328,7 @@ async def tid(ctx,tid : str,time = None, cal = None):
             tourny['desc'] = tourny['desc'] + 'MA Admission: %(macost)s\n'%tourny
         else:
             tourny['desc'] = tourny['desc'] + 'Admission: %(cost)s\n'%tourny
-        if(tourny['website'] != ''):
+        if(tourny['website'] != '---'):
             tourny['desc'] = tourny['desc'] + 'Event Website: <%(website)s>\n'%tourny
         tourny['desc'] = tourny['desc'] + 'Pokemon Website: <%(url)s>\n'%tourny
         tourny['desc'] = tourny['desc'] + 'Carpool: %(time)s\n'%tourny
@@ -338,7 +338,7 @@ async def tid(ctx,tid : str,time = None, cal = None):
             tourny['premier'] = tourny['name']
 
         tourny['desc2'] = '%(venue)s %(address1)s '%tourny
-        if(tourny['address2'] != ''):
+        if(tourny['address2'] != '---'):
             tourny['desc2'] = tourny['desc2'] + '%(address2)s '%tourny
         tourny['desc2'] = tourny['desc2'] + '%(city)s, %(state)s %(zipcode)s'%tourny
 
