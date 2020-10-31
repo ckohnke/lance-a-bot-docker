@@ -229,7 +229,6 @@ async def info(ctx):
     embed.add_field(name="$info", value="prints this message")
     embed.add_field(name="$hello", value="says hello!")
 
-
     await ctx.send(embed=embed)
     print("------ END")
 
@@ -252,7 +251,7 @@ async def tid(ctx,tid : str,time = None, cal = None):
         print('------ END')
         return
 
-    tourny = get_tid_info(ctx,tid)
+    tourny = await get_tid_info(ctx,tid)
     if tourny==False:
         return
 
@@ -429,15 +428,24 @@ async def cleanup_events(ctx):
         if(first_message[0].author.bot==True):
             # Determine if the event is completed
             tid = ''
+            for field in first
             for embed in first_message[0].embeds:
-                print(embed.title)
-                print(embed.description)
                 for field in embed.fields:
-                    print(field.name)
                     if field.name == "Pokemon Website":
-                        tid = field.value.split("/")[-1]
+                        tid = field.value.split("/>")[-1]
             print("TID FOUND:",tid)
 
+        tourny = await get_tid_info(ctx,tid)
+        delete_reason = ''
+        delete_channel = False
+        if tourny['staus'] == "Cancelled":
+            delete_reason = 'Event Cancelled'
+            delete_channel = True  
+        if tourny['status'] == "Complete":
+            delete_reason = 'Event Complete'
+            delete_channel = True
+        if delete_channel:
+            channel.delete(reason=delete_reason)
 
 
 bot.run(TOKEN)
