@@ -428,8 +428,15 @@ async def cleanup_events(ctx):
         # If a bot created the first message in the channel (presumed to be Lance)
         if(first_message[0].author.bot==True):
             # Determine if the event is completed
-            for embeds in first_message.embeds:
-                print(embeds.description)
+            tid = ''
+            for embed in first_message[0].embeds:
+                print(embed.title)
+                print(embed.description)
+                for field in embed.fields:
+                    print(field.name)
+                    if field.name == "Pokemon Website":
+                        tid = field.value.split("/")[-1]
+            print("TID FOUND:",tid)
 
 
 
