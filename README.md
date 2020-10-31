@@ -42,7 +42,8 @@ Looks up and posts information about event 01-11-000101.
         * Allow for separate TCG and VG channels (and prereleases?)
     * Make calendar optional / Allow user to select calendar. 
     * Make carpool option optional.
-* Auto-delete channel(s) once an event is marked as complete (tournament uploaded by the TO) + arbitrary time
+* ~~Auto-delete channel(s) once an event is marked as complete (tournament uploaded by the TO) + arbitrary time~~
+    * Doesn't happen automagically. Might need to generalize more before can run automatically.
 * Non PCOM events (Battlefy / Challonge)
     * Battlefy doesn't appear to have an API to tap into and it's horrible to scrape. 
     * Challonge might be "better," but marginally. 
