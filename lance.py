@@ -255,6 +255,7 @@ async def tid(ctx,tid : str,time = None, cal = None):
         onlinereg = True
     if(tourny['details'] != '---'):
         details = False
+    URLT = URL + "%s"%(tid)
 
     #print(tourny)
     color = 0xeee657
