@@ -62,7 +62,7 @@ if not creds or not creds.valid:
 
 service = build('calendar', 'v3', credentials=creds)
 
-def proc_fields(f,par):
+async def proc_fields(f,par):
     if(f.startswith('Tournament Name')):
         par['name']=f[len('Tournament Name'):]
     elif(f.startswith('Tournament ID')):
@@ -117,6 +117,91 @@ def proc_fields(f,par):
     elif(f.startswith('League Challenge')):
         par['sanctioned']='League Challenge - ' + f[len('League Challenge'):]
 
+async def get_tid_info(ctx, tid):
+    session_requests = requests.session()
+
+    # Get login csrf token
+    result = session_requests.get(LOGIN_URL)
+    content = result.content
+    soup = BeautifulSoup(content,'lxml')
+    token = soup.find("input", {"name": "lt"}).get("value")
+
+    print(token)
+    # Create payload
+    payload = {
+        "username": USERNAME,
+        "password": PASSWORD,
+        "lt": token,
+        "execution":"e1s1",
+        "_eventId":"submit"
+    }
+
+    # Perform login
+    result = session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
+
+    URLT = URL + "%s"%(tid)
+    print(URLT+"/")
+
+    result = session_requests.get(URLT, headers = dict(referer = URLT))
+    print(result.url)
+    while((result.url != URLT+"/") and (result.url != "https://www.pokemon.com/us/play-pokemon/")):
+        time.sleep(60)
+        result = session_requests.get(URLT, headers = dict(referer = URLT))
+        print(result.url)
+
+    if(result.url == "https://www.pokemon.com/us/play-pokemon/"):
+        await ctx.send("tournament id does not exist")
+        print('------ END')
+        return False
+
+    soup = BeautifulSoup(result.content, "lxml")
+    if(soup.body.find_all(text="Access Denied")):
+        print("ACCESS DENIED")
+        await ctx.send("WEBSITE ACCESS DENIED")
+        print('------ END')
+        return False
+
+    tourny = dict(name='---',idn='---',category='---',date='---',registration='---',onlinereg='---',product='---',premier='---',
+                  status='---',sanctioned='---',to='---',venue='---',address1='---',address2='---',city='---',state='---',
+                  zipcode='---',country='---',website='---',cost='---',jrcost='---',srcost='---',macost='---',
+                  details='---',lat='---',lon='---')
+
+    fields = []
+    ii=0
+    while True:
+        try:
+            fields.append((soup.select('form fieldset li')[ii].text.encode("ascii","ignore")))
+            ii = ii+1
+        except IndexError:
+            break
+
+    print(tourny)
+    for f in fields:
+        try:
+            print(f)
+            proc_fields(f.decode("ascii"),tourny)
+        except:
+            pass
+    if(len(tourny['details']) > 1024):
+        tourny['details'] = tourny['details'][0:1024]
+
+    age_cost = False
+    onlinereg = False
+    details = False
+    if((tourny['macost'] != '---') or (tourny['srcost'] != '---') or (tourny['jrcost'] != '---')):
+        age_cost = True
+    if(tourny['onlinereg'] != '---'):
+        onlinereg = True
+    if(tourny['details'] != '---'):
+        details = False
+
+    link = soup.find_all('a', {"href" : re.compile(r'http://maps.google.com/*')})
+
+    tourny['lat'] = float(link[0].attrs['href'].split("=")[1].split(' ')[0].strip(','))
+    tourny['lon'] = float(link[0].attrs['href'].split("=")[1].split(' ')[1].strip(',').strip())
+
+    return tourny
+
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -167,87 +252,9 @@ async def tid(ctx,tid : str,time = None, cal = None):
         print('------ END')
         return
 
-    session_requests = requests.session()
-
-    # Get login csrf token
-    result = session_requests.get(LOGIN_URL)
-    content = result.content
-    soup = BeautifulSoup(content,'lxml')
-    token = soup.find("input", {"name": "lt"}).get("value")
-
-    print(token)
-    # Create payload
-    payload = {
-        "username": USERNAME,
-        "password": PASSWORD,
-        "lt": token,
-        "execution":"e1s1",
-        "_eventId":"submit"
-    }
-
-    # Perform login
-    result = session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
-
-    URLT = URL + "%s"%(tid)
-    print(URLT+"/")
-
-    result = session_requests.get(URLT, headers = dict(referer = URLT))
-    print(result.url)
-    while((result.url != URLT+"/") and (result.url != "https://www.pokemon.com/us/play-pokemon/")):
-        time.sleep(60)
-        result = session_requests.get(URLT, headers = dict(referer = URLT))
-        print(result.url)
-
-    if(result.url == "https://www.pokemon.com/us/play-pokemon/"):
-        await ctx.send("tournament id does not exist")
-        print('------ END')
+    tourny = get_tid_info(ctx,tid)
+    if tourny==False:
         return
-
-    soup = BeautifulSoup(result.content, "lxml")
-    if(soup.body.find_all(text="Access Denied")):
-        print("ACCESS DENIED")
-        await ctx.send("WEBSITE ACCESS DENIED")
-        print('------ END')
-        return
-
-    tourny = dict(name='---',idn='---',category='---',date='---',registration='---',onlinereg='---',product='---',premier='---',
-                  status='---',sanctioned='---',to='---',venue='---',address1='---',address2='---',city='---',state='---',
-                  zipcode='---',country='---',website='---',cost='---',jrcost='---',srcost='---',macost='---',
-                  details='---',lat='---',lon='---')
-
-    fields = []
-    ii=0
-    while True:
-        try:
-            fields.append((soup.select('form fieldset li')[ii].text.encode("ascii","ignore")))
-            ii = ii+1
-        except IndexError:
-            break
-
-    print(tourny)
-    for f in fields:
-        try:
-            print(f)
-            proc_fields(f.decode("ascii"),tourny)
-        except:
-            pass
-    if(len(tourny['details']) > 1024):
-        tourny['details'] = tourny['details'][0:1024]
-
-    age_cost = False
-    onlinereg = False
-    details = False
-    if((tourny['macost'] != '---') or (tourny['srcost'] != '---') or (tourny['jrcost'] != '---')):
-        age_cost = True
-    if(tourny['onlinereg'] != '---'):
-        onlinereg = True
-    if(tourny['details'] != '---'):
-        details = False
-
-    link = soup.find_all('a', {"href" : re.compile(r'http://maps.google.com/*')})
-
-    tourny['lat'] = float(link[0].attrs['href'].split("=")[1].split(' ')[0].strip(','))
-    tourny['lon'] = float(link[0].attrs['href'].split("=")[1].split(' ')[1].strip(',').strip())
 
     #print(tourny)
     color = 0xeee657
@@ -417,9 +424,9 @@ async def cleanup_events(ctx):
 
     for channel in category.text_channels:
         # Find the first mesage in the text channel
-        first_message = await channel.history(oldest_first=True).flatten()[0]
+        first_message = await channel.history(oldest_first=True).flatten()
         # If a bot created the first message in the channel (presumed to be Lance)
-        if(first_message.author.bot==True):
+        if(first_message[0].author.bot==True):
             # Determine if the event is completed
             for embeds in first_message.embeds:
                 print(embeds.description)
