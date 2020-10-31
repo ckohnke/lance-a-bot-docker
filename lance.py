@@ -439,7 +439,7 @@ async def cleanup_events(ctx):
                 continue
 
             print("TID FOUND:",tid)
-            
+
             # lookup the tournament info to see if it's complete
             tourny = await get_tid_info(ctx,tid)
             if tourny == False:
@@ -450,7 +450,7 @@ async def cleanup_events(ctx):
             delete_channel = False
             if tourny['status'] == "Cancelled":
                 delete_reason = 'Event Cancelled'
-                delete_channel = True  
+                delete_channel = True
             if tourny['status'] == "Complete":
                 delete_reason = 'Event Complete'
                 delete_channel = True
@@ -461,15 +461,15 @@ async def cleanup_events(ctx):
 
             # Audit logs
             log_channel = None
-            for channel in ctx.guild.text_channels:
-                if channel.name == 'bot-logs':
-                    log_channel = channel
+            for chan in ctx.guild.text_channels:
+                if chan.name == 'bot-logs':
+                    log_channel = chan
 
-            embed = discord.Embed(title="Channel Deleted", description="", color=0xff0000)
+            embed = discord.Embed(title="Channel Deleted Log", description="", color=0xff0000)
             embed.add_field(name="Channel", value=delete_name,inline=False)
             embed.add_field(name="Reason", value=delete_reason,inline=False)
 
-            message = await channel.send(embed=embed)
+            message = await log_channel.send(embed=embed)
 
 
 bot.run(TOKEN)
