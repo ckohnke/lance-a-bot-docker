@@ -465,7 +465,7 @@ async def cleanup_events(ctx):
                 if channel.name == 'bot-logs':
                     log_channel = channel
 
-            embed = discord.Embed(title="Channel Deleted", description="", color='0xff0000')
+            embed = discord.Embed(title="Channel Deleted", description="", color=0xff0000)
             embed.add_field(name="Channel", value=delete_name,inline=False)
             embed.add_field(name="Reason", value=delete_reason,inline=False)
 
