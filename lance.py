@@ -428,24 +428,46 @@ async def cleanup_events(ctx):
         if(first_message[0].author.bot==True):
             # Determine if the event is completed
             tid = ''
-            for field in first
             for embed in first_message[0].embeds:
                 for field in embed.fields:
                     if field.name == "Pokemon Website":
                         tid = field.value.split("/>")[-1]
-            print("TID FOUND:",tid)
+            if tid == '':
+                print("no TID found")
+                continue
 
-        tourny = await get_tid_info(ctx,tid)
-        delete_reason = ''
-        delete_channel = False
-        if tourny['staus'] == "Cancelled":
-            delete_reason = 'Event Cancelled'
-            delete_channel = True  
-        if tourny['status'] == "Complete":
-            delete_reason = 'Event Complete'
-            delete_channel = True
-        if delete_channel:
-            channel.delete(reason=delete_reason)
+            print("TID FOUND:",tid)
+            
+            # lookup the tournament info to see if it's complete
+            tourny = await get_tid_info(ctx,tid)
+            if tourny == False:
+                continue
+
+            delete_reason = ''
+            delete_name = ''
+            delete_channel = False
+            if tourny['staus'] == "Cancelled":
+                delete_reason = 'Event Cancelled'
+                delete_channel = True  
+            if tourny['status'] == "Complete":
+                delete_reason = 'Event Complete'
+                delete_channel = True
+            # delete the channel
+            if delete_channel:
+                delete_name = channel.name
+                channel.delete(reason=delete_reason)
+
+            # Audit logs
+            log_channel = None
+            for channel in guild.text_channel:
+                if channel.name == 'bot-logs':
+                    log_channel = channel
+
+            embed = discord.Embed(title="Channel Deleted", description="", color='0xff0000')
+            embed.add_field(name="Channel", value=delete_name,inline=False)
+            embed.add_field(name="Reason", value=delete_reason,inline=False)
+
+            message = await channel.send(embed=embed)
 
 
 bot.run(TOKEN)
