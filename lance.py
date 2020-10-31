@@ -457,7 +457,7 @@ async def cleanup_events(ctx):
             # delete the channel
             if delete_channel:
                 delete_name = channel.name
-                channel.delete(reason=delete_reason)
+                delete = await channel.delete(reason=delete_reason)
 
             # Audit logs
             log_channel = None
