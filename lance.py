@@ -448,7 +448,7 @@ async def cleanup_events(ctx):
             delete_reason = ''
             delete_name = ''
             delete_channel = False
-            if tourny['staus'] == "Cancelled":
+            if tourny['status'] == "Cancelled":
                 delete_reason = 'Event Cancelled'
                 delete_channel = True  
             if tourny['status'] == "Complete":
