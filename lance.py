@@ -179,7 +179,7 @@ async def get_tid_info(ctx, tid):
     for f in fields:
         try:
             print(f)
-            proc_fields(f.decode("ascii"),tourny)
+            await proc_fields(f.decode("ascii"),tourny)
         except:
             pass
     if(len(tourny['details']) > 1024):
@@ -433,7 +433,7 @@ async def cleanup_events(ctx):
             for embed in first_message[0].embeds:
                 for field in embed.fields:
                     if field.name == "Pokemon Website":
-                        tid = field.value.split("/>")[-1].strip("<>")
+                        tid = field.value.split("/")[-1].strip("<>")
             if tid == '':
                 print("no TID found")
                 continue
