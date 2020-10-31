@@ -461,7 +461,7 @@ async def cleanup_events(ctx):
 
             # Audit logs
             log_channel = None
-            for channel in guild.text_channel:
+            for channel in ctx.guild.text_channel:
                 if channel.name == 'bot-logs':
                     log_channel = channel
 
