@@ -432,7 +432,7 @@ async def cleanup_events(ctx):
             for embed in first_message[0].embeds:
                 for field in embed.fields:
                     if field.name == "Pokemon Website":
-                        tid = field.value.split("/>")[-1]
+                        tid = field.value.split("/>")[-1].strip("<>")
             if tid == '':
                 print("no TID found")
                 continue
