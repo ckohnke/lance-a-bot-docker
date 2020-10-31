@@ -185,15 +185,6 @@ async def get_tid_info(ctx, tid):
     if(len(tourny['details']) > 1024):
         tourny['details'] = tourny['details'][0:1024]
 
-    age_cost = False
-    onlinereg = False
-    details = False
-    if((tourny['macost'] != '---') or (tourny['srcost'] != '---') or (tourny['jrcost'] != '---')):
-        age_cost = True
-    if(tourny['onlinereg'] != '---'):
-        onlinereg = True
-    if(tourny['details'] != '---'):
-        details = False
 
     link = soup.find_all('a', {"href" : re.compile(r'http://maps.google.com/*')})
 
@@ -254,6 +245,16 @@ async def tid(ctx,tid : str,time = None, cal = None):
     tourny = await get_tid_info(ctx,tid)
     if tourny==False:
         return
+
+    age_cost = False
+    onlinereg = False
+    details = False
+    if((tourny['macost'] != '---') or (tourny['srcost'] != '---') or (tourny['jrcost'] != '---')):
+        age_cost = True
+    if(tourny['onlinereg'] != '---'):
+        onlinereg = True
+    if(tourny['details'] != '---'):
+        details = False
 
     #print(tourny)
     color = 0xeee657
