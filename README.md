@@ -15,20 +15,20 @@ Some assembly still required. Will need to setup where the bot posts events, the
 
 | Syntax      | Description |
 | ----------- | ----------- |
-| !hello      | Hello World       |
-| !info   | prints bot commands and syntax (needs updating)        |
-| !tid ##-##-###### [time] [cal] [lookup]   | the main command. Used to lookup info about a tournament from the Event Locator.        |
+| $hello      | Hello World       |
+| $info   | prints bot commands and syntax (needs updating)        |
+| $tid ##-##-###### [time] [cal] [lookup]   | the main command. Used to lookup info about a tournament from the Event Locator.        |
 | [time]   | Adds a meetup time in the event description posted ot the channel.         |
 | [cal]   | If true, adds the event to the Google Calendar        |
 | [lookup]   | Does not create a channel and simply prints out the event information.        |
 
 # Examples
 
-    !tid 01-11-000101 7:30PM true
+    $tid 01-11-000101 7:30PM true
 
 Looks up event 01-11-000101, creates a channel to discuss the event, sets the carpool time to 7:30PM, and adds the event to the Google Calendar. 
 
-    !tid 01-11-000101 lookup
+    $tid 01-11-000101 lookup
 
 Looks up and posts information about event 01-11-000101.
 

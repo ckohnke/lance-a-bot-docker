@@ -16,6 +16,7 @@ import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+import aiocron
 
 #config = np.loadtxt("config",dtype=str)
 #print(type(str(config[0])))
@@ -404,5 +405,25 @@ async def tid(ctx,tid : str,time = None, cal = None):
 
 
     print('------ END')
+
+#@aiocron.crontab('0 22 * * *')
+@bot.command()
+async def cleanup_events(ctx):
+    # Figure out the category
+    category = None
+    for cat in ctx.guild.categories:
+        if cat.name == 'news':
+            category = cat
+
+    for channel in category.text_channels:
+        # Find the first mesage in the text channel
+        first_message = await channel.history(oldest_first=True).flatten()[0]
+        # If a bot created the first message in the channel (presumed to be Lance)
+        if(first_message.author.bot==True):
+            # Determine if the event is completed
+            for embeds in first_message.embeds:
+                print(embeds.description)
+
+
 
 bot.run(TOKEN)
